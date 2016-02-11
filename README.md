@@ -1,4 +1,4 @@
-# ChangeCounter version 1.0
+# ChangeCounter version 1.1
 Gives the amount of coins that you should give to a customer for change. Only works with coins, will implement bills.
 
 How to use: <br>
