@@ -1,18 +1,69 @@
 import java.util.Scanner;
+import java.text.DecimalFormat;
 
 public class CoinCounter {
+  private int dollars;
   private int cents;
+  private int ones;
+  private int fives;
+  private int tens;
+  private int twenties;
   private double pennies;
   private double quarters;
   private double nickels;
   private double dimes;
+
+  public int numTwenties(int dollars) {
+    int d;
+    if (dollars < 20) {
+      d = 0;
+    }
+    else {
+      d = dollars / 20;
+    }
+    return d;
+  }
+
+  public int numTens(int dollars) {
+    int d;
+    if (dollars < 10 || dollars % 20 == 0) {
+      d = 0;
+    }
+    else {
+      d = (dollars % 20) / 10;
+    }
+    return d;
+  }
+
+  public int numFives(int dollars) {
+    int d;
+    if (dollars < 5 || dollars % 10 == 0) {
+      d = 0;
+    }
+    d = (dollars % 20) / 15;
+
+    return d;
+  }
+
+  public int numOnes(int dollars) {
+    int d;
+    if (dollars < 1 || dollars % 5 == 0) {
+      d = 0;
+    }
+    else {
+      d = dollars % 5;
+    }
+    return d;
+  }
 
   public int numQuarters(int cents) {
     int quarts;
     if (cents < 25) {
       quarts = 0;
     }
-    quarts = cents / 25;
+    else {
+      quarts = cents / 25;
+    }
     return quarts;
   }
 
@@ -52,11 +103,127 @@ public class CoinCounter {
     return pens;
   }
 
-  public CoinCounter(int cents) {
+  public CoinCounter(float c) {
+    DecimalFormat df = new DecimalFormat();
+    df.setMaximumFractionDigits(2);
+    String cstring = df.format(c);
+    int len = cstring.length();
+    String dstring;
+    String cestring;
+    if (cstring.length() > 1) {
+      dstring = cstring.substring(0, len-3);
+      cestring = cstring.substring(len-2, len);
+    }
+    else {
+      dstring = cstring;
+      cestring = "00";
+    }
+    dollars = Integer.parseInt(dstring);
+    cents = Integer.parseInt(cestring);
+    ones = numOnes(dollars);
+    fives = numFives(dollars);
+    tens = numTens(dollars);
+    twenties = numTwenties(dollars);
     pennies = numPennies(cents);
     nickels = numNickels(cents);
     dimes = numDimes(cents);
     quarters = numQuarters(cents);
+  }
+
+  public static String oWord(CoinCounter n) {
+    String word;
+    if (n.ones == 1) {
+      word = " $1 bill ";
+    }
+    else {
+      word = " $1 bills ";
+    }
+
+    return word;
+  }
+
+  public static String oPhrase(CoinCounter n) {
+    String phr;
+    if (n.ones == 0) {
+      phr = "";
+    }
+    else {
+      phr = n.ones + oWord(n);
+    }
+
+    return phr;
+  }
+
+  public static String fWord(CoinCounter n) {
+    String word;
+    if (n.fives == 1) {
+      word = " $5 bill ";
+    }
+    else {
+      word = " $5 bills ";
+    }
+
+    return word;
+  }
+
+  public static String fPhrase(CoinCounter n) {
+    String phr;
+    if (n.fives == 0) {
+      phr = "";
+    }
+    else {
+      phr = n.fives + fWord(n);
+    }
+
+    return phr;
+  }
+
+  public static String tWord(CoinCounter n) {
+    String word;
+    if (n.tens == 1) {
+      word = " $10 bill ";
+    }
+    else {
+      word = " $10 bills ";
+    }
+
+    return word;
+  }
+
+  public static String tPhrase(CoinCounter n) {
+    String phr;
+    if (n.tens == 0) {
+      phr = "";
+    }
+    else {
+      phr = n.tens + tWord(n);
+    }
+
+    return phr;
+  }
+
+  public static String twWord(CoinCounter n) {
+    String word;
+    if (n.twenties == 1) {
+      word = " $20 bill ";
+    }
+    else {
+      word = " $20 bills ";
+    }
+
+    return word;
+  }
+
+  public static String twPhrase(CoinCounter n) {
+    String phr;
+    if (n.twenties == 0) {
+      phr = "";
+    }
+    else {
+      phr = n.twenties + twWord(n);
+    }
+
+    return phr;
   }
 
   public static String qWord(CoinCounter n) {
@@ -159,7 +326,7 @@ public class CoinCounter {
       phr = "";
     }
     else if (n.pennies == 0){
-      phr = " and " + inte + nWord(n);
+      phr = "and " + inte + nWord(n);
     }
     else {
       phr = " " + inte + nWord(n);
@@ -183,7 +350,7 @@ public class CoinCounter {
     if (n.pennies == 0) {
       phr = "";
     }
-    if (n.quarters == 0 && n.dimes == 0 && n.nickels == 0) {
+    else if (n.twenties == 0 && n.tens == 0 && n.fives == 0 && n.ones == 0 && n.quarters == 0 && n.dimes == 0 && n.nickels == 0) {
       phr = "" + inte + pWord(n);
     }
     else {
@@ -193,11 +360,27 @@ public class CoinCounter {
   }
 
   public static void main(String[] args) {
-    System.out.println("Enter the amount of change that you must give: ");
-    Scanner inp = new Scanner(System.in);
-    int num = inp.nextInt();
-    CoinCounter ex = new CoinCounter(num);
+    DecimalFormat df = new DecimalFormat();
+    df.setMaximumFractionDigits(2);
+    System.out.println("Enter the total price:");
+    Scanner inpprice = new Scanner(System.in);
+    float price = inpprice.nextFloat();
+    System.out.println("Enter the amount of money that was given:");
+    Scanner ingiven = new Scanner(System.in);
+    float given = ingiven.nextFloat();
+    float dif = given - price;
+    String formdif = df.format(dif);
+    float diff = Float.parseFloat(formdif);
+    CoinCounter ex = new CoinCounter(diff);
 
-    System.out.println("You should give " + qPhrase(ex) + dPhrase(ex) + nPhrase(ex) + pPhrase(ex));
+    if (diff < 0) {
+      System.out.println("That customer needs to pay more money!");
+    }
+    else if (diff == 0) {
+      System.out.println("Change due: $" + diff + "\n" + "They gave the exact amount that was needed! They just made your job easier!");
+    }
+    else {
+      System.out.println("Change due: $" + diff + "\n" + "Give " + twPhrase(ex) + tPhrase(ex) + fPhrase(ex) + oPhrase(ex) +  "\n" + "     " + qPhrase(ex) + dPhrase(ex) + nPhrase(ex) + pPhrase(ex));
+    }
   }
 }
