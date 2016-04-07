@@ -1,6 +1,12 @@
 # ChangeCounter version 1.1
 Gives the amount of coins that you should give to a customer for change. Only works with coins, will implement bills.
 
+CHANGES:
+<ul>
+  <li> Lets you input the amount of money that you are given and the total cost and calculates the amount of change from there.</li>
+  <li> Text is formatted correctly </li>
+</ul>
+
 How to use: <br>
 1. Open the terminal, change your current directory to the folder in which the ChangeCounter is located. <br>
 2. Type "javac CoinCounter.java" into the terminal in order to compile the program.<br>
